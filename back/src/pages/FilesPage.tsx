@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../api/api';
 
 export default function FilesPage() {
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<FileSummary[]>([]);
 
   useEffect(() => {
     api.get('/files').then((res) => setFiles(res.data.items || []));
@@ -38,3 +38,10 @@ export default function FilesPage() {
     </Paper>
   );
 }
+
+type FileSummary = {
+  id: string;
+  originalName: string;
+  version: string | number;
+  isActive: boolean;
+};

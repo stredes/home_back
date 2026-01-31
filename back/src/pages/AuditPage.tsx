@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../api/api';
 
 export default function AuditPage() {
-  const [logs, setLogs] = useState<any[]>([]);
+  const [logs, setLogs] = useState<AuditLog[]>([]);
 
   useEffect(() => {
     api.get('/audit').then((res) => setLogs(res.data.items || []));
@@ -37,3 +37,11 @@ export default function AuditPage() {
     </Paper>
   );
 }
+
+type AuditLog = {
+  id: string;
+  actorUserId: string;
+  action: string;
+  entity: string;
+  createdAt: string;
+};

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../api/api';
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<UserSummary[]>([]);
 
   useEffect(() => {
     api.get('/users').then((res) => setUsers(res.data.items || []));
@@ -30,7 +30,7 @@ export default function UsersPage() {
             <TableRow key={u.id}>
               <TableCell>{u.email}</TableCell>
               <TableCell>{u.nombre}</TableCell>
-              <TableCell>{(u.roles || []).map((r: any) => r.role?.name).join(', ')}</TableCell>
+              <TableCell>{(u.roles || []).map((r) => r.role?.name).filter(Boolean).join(', ')}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -38,3 +38,10 @@ export default function UsersPage() {
     </Paper>
   );
 }
+
+type UserSummary = {
+  id: string;
+  email: string;
+  nombre: string;
+  roles?: { role?: { name?: string } }[];
+};

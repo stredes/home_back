@@ -15,13 +15,30 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
-    if (error.response?.status === 401 && !error.config.__isRetry) {
-      error.config.__isRetry = true;
-      const refresh = await api.post('/auth/refresh', {});
-      setAccessToken(refresh.data.accessToken);
-      error.config.headers.Authorization = `Bearer ${refresh.data.accessToken}`;
-      return api.request(error.config);
+    const config = error.config as {
+      __isRetry?: boolean;
+      skipAuthRefresh?: boolean;
+      headers?: Record<string, string>;
+    };
+    if (error.response?.status === 401 && !config?.__isRetry && !config?.skipAuthRefresh) {
+      config.__isRetry = true;
+      try {
+        const refresh = await api.post('/auth/refresh', {}, { skipAuthRefresh: true });
+        setAccessToken(refresh.data.accessToken);
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${refresh.data.accessToken}`;
+        return api.request(config);
+      } catch {
+        setAccessToken(null);
+      }
     }
     return Promise.reject(error);
   },
 );
+
+export async function refreshAccessToken() {
+  const refresh = await api.post('/auth/refresh', {}, { skipAuthRefresh: true });
+  const token = refresh.data?.accessToken;
+  if (token) setAccessToken(token);
+  return token as string | undefined;
+}
