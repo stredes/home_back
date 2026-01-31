@@ -71,3 +71,13 @@ export default defineConfig([
   },
 ])
 ```
+
+## Deploy en Vercel
+
+1) En Vercel, configura el **Root Directory** a `home_front/app`.
+2) Build Command: `npm run build`  
+3) Output Directory: `dist`
+4) Variables de entorno:
+   - `VITE_API_URL` (URL pública del backend/túnel)
+
+El archivo `vercel.json` incluye un rewrite para SPA (React Router) que envía todas las rutas a `index.html`.
