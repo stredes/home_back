@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 import { getAccessToken, setAccessToken } from './token';
 
 export const api = axios.create({
@@ -15,11 +16,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
-    const config = error.config as {
-      __isRetry?: boolean;
-      skipAuthRefresh?: boolean;
-      headers?: Record<string, string>;
-    };
+    const config = error.config as AxiosRequestConfig;
     if (error.response?.status === 401 && !config?.__isRetry && !config?.skipAuthRefresh) {
       config.__isRetry = true;
       try {

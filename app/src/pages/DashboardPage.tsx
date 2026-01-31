@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Chip, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 
 const cards = [
   { label: 'Usuarios activos', value: '—' },
@@ -15,23 +15,27 @@ export default function DashboardPage() {
           Estado operativo del sistema y métricas clave.
         </Typography>
       </Box>
-      <Grid container spacing={2}>
+      <Box
+        sx={{
+          display: 'grid',
+          gap: 2,
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' },
+        }}
+      >
         {cards.map((c) => (
-          <Grid item xs={12} md={4} key={c.label}>
-            <Card>
-              <CardContent>
-                <Typography variant="overline">{c.label}</Typography>
-                <Typography variant="h3" sx={{ mt: 1 }}>
-                  {c.value}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Última actualización: ahora
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+          <Card key={c.label}>
+            <CardContent>
+              <Typography variant="overline">{c.label}</Typography>
+              <Typography variant="h3" sx={{ mt: 1 }}>
+                {c.value}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Última actualización: ahora
+              </Typography>
+            </CardContent>
+          </Card>
         ))}
-      </Grid>
+      </Box>
       <Card>
         <CardContent sx={{ display: 'grid', gap: 2 }}>
           <Typography variant="h6">Estado de módulos</Typography>
